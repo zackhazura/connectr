@@ -14,11 +14,13 @@ class Cards extends React.Component {
     }
 
     this.position = new Animated.ValueXY();
+
     this.rotate = this.position.x.interpolate({
       inputRange: [-(SCREEN_WIDTH/2), 0, SCREEN_WIDTH/2],
       outputRange: ['-10deg', '0deg', '10deg'],
       extrapolate: 'clamp'
     })
+
     this.rotateAndTranslate = {
       transform: [{
         rotate: this.rotate
@@ -27,9 +29,6 @@ class Cards extends React.Component {
       ]
     }
 
-  }
-
-  UNSAFE_componentWillMount() {
     this.PanResponder = PanResponder.create({
       onStartShouldSetPanResponder: (event, gestureState) => true,
       onPanResponderMove: (event, gestureState) => {
@@ -43,6 +42,7 @@ class Cards extends React.Component {
               y: gestureState.dy
             }
           }).start(() => {
+            this.props.handleSwipeRight();
             this.setState({
               currentCardIndex: (this.state.currentCardIndex+1),
             }, () => {
@@ -56,9 +56,10 @@ class Cards extends React.Component {
               y: gestureState.dy
             }
           }).start(() => {
+            this.props.handleSwipeLeft();
             this.setState({
               currentCardIndex: (this.state.currentCardIndex+1),
-            }, ()=> {
+            }, () => {
               this.position.setValue({x: 0, y: 0});
             });
           })
@@ -69,7 +70,9 @@ class Cards extends React.Component {
         }
       }
     })
+
   }
+
 
   render() {
     const { currentCardIndex } = this.state;
@@ -86,7 +89,7 @@ class Cards extends React.Component {
                 style={[
                   this.rotateAndTranslate,
                   {
-                    height: SCREEN_HEIGHT - 120,
+                    height: SCREEN_HEIGHT - 300,
                     width: SCREEN_WIDTH,
                     padding: 10,
                     position: 'absolute'
@@ -111,7 +114,7 @@ class Cards extends React.Component {
                 key={image.id}
                 style={
                   {
-                    height: SCREEN_HEIGHT - 120,
+                    height: SCREEN_HEIGHT - 300,
                     width: SCREEN_WIDTH,
                     padding: 10,
                     position: 'absolute'
